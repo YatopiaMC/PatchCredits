@@ -35,7 +35,7 @@ public class PatchParser {
 				coAuthors.add(decodeStringIfNeeded(line.replace("Co-authored-by: ", "").split("<")[0].trim()));
 			}
 		}
-		return new PatchInfo(from, subject, coAuthors);
+		return new PatchInfo(file.getParentFile().getName(), from, subject, coAuthors);
 	}
 	
 	private static String decodeStringIfNeeded(String org) throws IOException{
@@ -53,6 +53,7 @@ public class PatchParser {
 	@AllArgsConstructor
 	@ToString
 	public static class PatchInfo {
+		private String parent;
 		private String from;
 		private String subject;
 		private List<String> coAuthors;
