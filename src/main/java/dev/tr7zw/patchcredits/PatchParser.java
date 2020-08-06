@@ -2,6 +2,7 @@ package dev.tr7zw.patchcredits;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -27,14 +28,25 @@ public class PatchParser {
 		List<String> coAuthors = new ArrayList<>();
 		for(String line : lines) {
 			if(line.startsWith("From: ")) {
-				from = line.replace("From: ", "").split("<")[0].trim();
+				from = decodeStringIfNeeded(line.replace("From: ", "").split("<")[0].trim());
 			}else if(line.startsWith("Subject: ")) {
 				subject = line.replace("Subject: ", "").replace("[PATCH]", "").trim();
 			}else if(line.startsWith("Co-authored-by: ")) {
-				coAuthors.add(line.replace("Co-authored-by: ", "").split("<")[0].trim());
+				coAuthors.add(decodeStringIfNeeded(line.replace("Co-authored-by: ", "").split("<")[0].trim()));
 			}
 		}
 		return new PatchInfo(from, subject, coAuthors);
+	}
+	
+	private static String decodeStringIfNeeded(String org) throws IOException{
+		if(org.contains("=") || org.startsWith("=?UTF-8")) {
+			try {
+				return javax.mail.internet.MimeUtility.decodeText(org);
+			}catch(UnsupportedEncodingException ex) {
+				throw new IOException(ex);
+			}
+		}
+		return org;
 	}
 	
 	@Getter

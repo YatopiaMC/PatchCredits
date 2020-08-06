@@ -39,6 +39,11 @@
       <version>1.18.10</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+    	 <groupId>javax.mail</groupId>
+		 <artifactId>mail</artifactId>
+		 <version>1.4.4</version>
+    </dependency>
   </dependencies>
   <build>
     <defaultGoal>clean install</defaultGoal>

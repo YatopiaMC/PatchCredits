@@ -1,9 +1,12 @@
 package dev.tr7zw.patchcredits;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +39,7 @@ public class PatchCredits extends AbstractMojo {
 	/**
 	 * Patch directory
 	 */
-	@Parameter(defaultValue = "${project.basedir}/patches", property = "basedir", required = true)
+	@Parameter(defaultValue = "${project.basedir}/patches", property = "patchdir", required = true)
 	private File patchDirectory;
 	
 	/**
@@ -62,6 +65,8 @@ public class PatchCredits extends AbstractMojo {
 			return;
 		}
 
+		super.getLog().info("Scanning '" + patchDirectory + "' for patches!");
+		
 		List<PatchInfo> patches = new ArrayList<>();
 		scanFolder(patchDirectory, patches);
 		
@@ -85,7 +90,7 @@ public class PatchCredits extends AbstractMojo {
 		    	outputFile.delete();
 		    }
 		    @Cleanup
-		    FileWriter writer = new FileWriter(outputFile);
+		    OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8);
 		    mustache.execute(writer, output).flush();
 		}catch(IOException ex) {
 			throw new MojoExecutionException("Error while writing the output file!", ex);
