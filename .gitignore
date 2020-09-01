@@ -25,3 +25,9 @@ hs_err_pid*
 .classpath
 .project
 *.prefs
+
+# IntelliJ & maven specific
+target/
+dependency-reduced-pom.xml
+*.iml
+.idea/
